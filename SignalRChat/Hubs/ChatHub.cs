@@ -23,5 +23,36 @@ namespace SignalRChat.Hubs
             await Clients.All.SendAsync("ReceiveMessage", user, message);
         }
 
+        //JOIN GROUP
+        public async Task JoinGroupChat(string group, string user)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, group);
+            await Clients.Group(group).SendAsync("JoinGroupMessage", group, user);
+        }
+
+        public async Task JoinGroupMessage(string group, string user)
+        {
+            await Clients.Group(group).SendAsync("JoinGroupMessage", user);
+        }
+
+        //LEAVE GROUP
+        public async Task LeaveGroupChat(string group, string user)
+        {
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, group);
+            await Clients.Group(group).SendAsync("LeaveGroupMessage", group, user);
+        }
+        public async Task LeaveGroupMessage(string group, string user)
+        {
+            await Clients.Group(group).SendAsync("LeaveGroupMessage", user);
+        }
+
+        //SEND GROUP MESSAGE
+        public async Task SendGroupMessage(string group, string user, string message)
+        {
+            await Clients.Group(group).SendAsync("ReceiveGroupMessage", user, message);
+        }
+
+      
+       
     }
 }
